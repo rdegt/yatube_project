@@ -2,11 +2,14 @@ from django.shortcuts import render
 
 # groups/views.py
 from django.http import HttpResponse
+from django.template import loader
+from django.shortcuts import render
 
 
 # Главная страница
-def index(request):    
-    return HttpResponse('Главная страница')
+def index(request):
+    template = 'posts/index.html'
+    return render(request, template)
 
 
 # Страница со списком постов по группам
