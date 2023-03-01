@@ -20,7 +20,7 @@ urlpatterns = [
     # Если на сервер пришёл любой запрос (''),
     # перейди в файл urls приложения posts 
     # и проверь там все path() на совпадение с запрошенным URL
-    path('', include('posts.urls')),
+    path('', include('posts.urls', namespace='posts')),
     # Если в приложении posts не найдётся совпадений -
     # Django продолжит искать совпадения здесь, в головном файле urls.py.
     path('admin/', admin.site.urls),
