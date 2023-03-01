@@ -15,4 +15,5 @@ def index(request):
 # Страница со списком постов по группам
 # view принимает параметр slug из path()
 def group_posts(request, slug):
-    return HttpResponse(f'Список постов по группе {slug}')
+    template = 'posts/group_list.html'
+    return render(request, template)
