@@ -5,12 +5,17 @@ from django.http import HttpResponse
 from django.template import loader
 from django.shortcuts import render
 
+from .models import Post
+
 
 # Главная страница
 def index(request):
+    # в post сохранена выборка из 10 объектов модели Post
+    # отсортированных по дате новые записи вверху
+    posts = Post.objects.order_by('-pub_date')[:10]
     template = 'posts/index.html'
     context = {
-        'text': "Это главная страница проекта Yatube",
+        'posts': posts,
     }
     return render(request, template, context)
 
