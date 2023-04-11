@@ -1,11 +1,27 @@
 {% extends 'base.html' %}
 
 {% block title %}
-  Лев Толстой – зеркало русской революции.
+  Записи группы
 {% endblock %}
 
 {% block main %}
-  {{ text }}
+<h2><center> {{group.title}} </center></h2>
+<p><center>
+  {{ group.description }}
+</center></p>
+<!-- класс py-5 создает отступы сверху и снизу блока -->
+  {% for post in posts %}
+  <ul>
+    <li>
+      Автор: {{ post.author.get_full_name }}
+    </li>
+    <li>
+      Дата публикации: {{ post.pub_date|date:"d E Y" }}
+    </li>
+  </ul>
+  <p>{{ post.text }}</p>
+  {% if not forloop.last %}<hr>{% endif %}
+  {% endfor %}
 {% endblock %}
 
 {% block footer %}
