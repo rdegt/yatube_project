@@ -24,7 +24,7 @@ class Post(models.Model):
 class Group(models.Model):
     title = models.CharField(max_length=50)
     slug = models.SlugField()
-    description = models.TextField
+    description = models.TextField(default="Без описания")
 
     class Meta:
         def __str__(self):

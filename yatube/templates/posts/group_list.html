@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 
 {% block title %}
-  Записи группы
+  Записи группы по интересам
 {% endblock %}
 
 {% block main %}
 <h2><center> {{group.title}} </center></h2>
-<p><center>
+<p><b><center>
   {{ group.description }}
-</center></p>
+</center></b></p>
 <!-- класс py-5 создает отступы сверху и снизу блока -->
   {% for post in posts %}
   <ul>

@@ -15,6 +15,9 @@
       <li>
         Дата публикации: {{ post.pub_date|date:"d E Y" }}
       </li>
+      <li>
+        Группа: {{ post.group.title }}
+      </li>
     </ul>
     <p>{{ post.text }}</p>    
     {% if post.group %}   
