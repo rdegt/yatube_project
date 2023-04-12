@@ -24,4 +24,11 @@ urlpatterns = [
     # Если в приложении posts не найдётся совпадений -
     # Django продолжит искать совпадения здесь, в головном файле urls.py.
     path('admin/', admin.site.urls),
+    # Перенаправляем auth в собственное приложение
+    path('auth/', include('users.urls')),
+    # Все адреса с префиксом auth/ 
+    # будут перенаправлены в модуль django.contrib.auth
+    path('auth/', include('django.contrib.auth.urls')),
+    # lib/python3.8/site-packages/django/contrib/auth/urls.py
+
 ]
