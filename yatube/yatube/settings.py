@@ -38,8 +38,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users.apps.UsersConfig',  #добавили новое приложение users 
+    'users.apps.UsersConfig',  #добавили новое приложение users
+    'core.apps.CoreConfig'
 ]
+
+EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
+# указываем директорию, в которую будут складываться файлы писем
+EMAIL_FILE_PATH = os.path.join(BASE_DIR, 'sent_emails') 
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -66,7 +72,8 @@ TEMPLATES = [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+                'django.contrib.messages.context_processors.messages',  
+                'core.context_processors.year.year',
             ],
         },
     },
@@ -118,6 +125,14 @@ USE_L10N = True
 
 USE_TZ = True
 
+LOGIN_URL = 'users:login'
+# это адрес на который перенаправляются польз для авторизации
+
+LOGIN_REDIRECT_URL = 'posts:index'
+# после успешной авторизации
+
+LOGOUT_REDIRECT_URL = 'posts:index' 
+# после выхода из системы (на главную страницу проекта)
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/

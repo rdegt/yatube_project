@@ -10,7 +10,7 @@
   {{ group.description }}
 </center></b></p>
 <!-- класс py-5 создает отступы сверху и снизу блока -->
-  {% for post in posts %}
+  {% for post in page_obj %}
   <ul>
     <li>
       Автор: {{ post.author.get_full_name }}
@@ -22,6 +22,7 @@
   <p>{{ post.text }}</p>
   {% if not forloop.last %}<hr>{% endif %}
   {% endfor %}
+  {% include 'posts/includes/paginator.html' %}
 {% endblock %}
 
 {% block footer %}

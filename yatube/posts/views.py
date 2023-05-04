@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.core.paginator import Paginator
 
 # groups/views.py
 from django.http import HttpResponse
@@ -8,15 +9,25 @@ from django.shortcuts import render, get_object_or_404
 
 from .models import Post, Group
 
+from django.contrib.auth.decorators import login_required
+# Декоратор для зареганных пользователей
 
 # Главная страница
+
 def index(request):
     # в post сохранена выборка из 10 объектов модели Post
     # отсортированных по дате новые записи вверху
-    posts = Post.objects.order_by('-pub_date')[:10]
+    # с помощью Paginator
+    posts = Post.objects.all().order_by('-pub_date')
+    paginator = Paginator(posts, 10)
+    n = request.GET.get('page')
+
+    page_object = paginator.get_page(n)
+
     template = 'posts/index.html'
     context = {
-        'posts': posts,
+        #'posts': page_object,
+        'page_obj': page_object,
     }
     return render(request, template, context)
 
@@ -27,10 +38,14 @@ def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
     # в posts сохранена выборка из 10 объектов модели Post
     # отсортированных по дате новые записи вверху filter=group
-    posts = Post.objects.filter(group=group).order_by('-pub_date')[:10]
+    posts = Post.objects.all().filter(group=group).order_by('-pub_date')
+    paginator = Paginator(posts, 2)
+    n = request.GET.get('page')
+    page_object = paginator.get_page(n)
+
     template = 'posts/group_list.html'
     context = {
         'group': group,
-        'posts': posts
+        'page_obj': page_object,
     }
     return render(request, template, context)
