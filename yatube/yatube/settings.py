@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',  #добавили новое приложение users
-    'core.apps.CoreConfig'
+    'core.apps.CoreConfig',
+    'about.apps.AboutConfig' #добавили новое приложение about
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
