@@ -7,7 +7,7 @@ from django.template import loader
 from django.shortcuts import render, get_object_or_404
 #get_object_or_404 получает объект из БД или возвращает ошибкуесли не найден
 
-from .models import Post, Group
+from .models import Post, Group, User
 
 from django.contrib.auth.decorators import login_required
 # Декоратор для зареганных пользователей
@@ -49,3 +49,28 @@ def group_posts(request, slug):
         'page_obj': page_object,
     }
     return render(request, template, context)
+
+
+def profile(request, username):
+    human = get_object_or_404(User, username=username)
+    posts = Post.objects.all().filter(author=human).order_by('-pub_date')
+    paginator = Paginator(posts, 2)
+    count = paginator.count
+    n = request.GET.get('page')
+    page_object = paginator.get_page(n)
+
+    context = {
+        'human': human,
+        'page_obj': page_object,
+        'number_posts': count,
+    }
+    return render(request, 'posts/profile.html', context)
+
+def post_detail(request, post_id):
+    posts = get_object_or_404(Post, pk=post_id)
+
+
+    context = {
+        'post': posts,
+    }
+    return render(request, 'posts/post_detail.html', context) 
