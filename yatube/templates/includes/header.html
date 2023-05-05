@@ -27,7 +27,7 @@
         </li>
         {% if user.is_authenticated %}
         <li class="nav-item"> 
-          <a class="nav-link" href="">Новая запись</a>
+          <a class="nav-link" href="{% url 'posts:post_create' %}">Новая запись</a>
         </li>
         <li class="nav-item"> 
           <a class="nav-link link-light" href="<!--  -->">Изменить пароль</a>

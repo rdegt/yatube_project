@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
+from .forms import PostForm
+from django.shortcuts import redirect
 
 # groups/views.py
 from django.http import HttpResponse
@@ -68,9 +70,46 @@ def profile(request, username):
 
 def post_detail(request, post_id):
     posts = get_object_or_404(Post, pk=post_id)
-
-
     context = {
         'post': posts,
     }
-    return render(request, 'posts/post_detail.html', context) 
+    return render(request, 'posts/post_detail.html', context)
+
+
+@login_required
+def post_create(request):
+    #передали в форму полученные данные
+    form = PostForm(request.POST)
+    context = {
+        'form': form,
+    }
+    if form.is_valid():
+        #не сохраняем (commit)
+        object = form.save(commit=False)
+        #назначаем пользователя объекту и сохраняем его
+        object.author = request.user
+        object.save()
+        return redirect('posts:profile', object.author)
+    return render(request, 'posts/create_post.html', context)
+
+
+@login_required
+def post_edit(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    human = post.author
+    if human != request.user:
+        return redirect('posts:post_detail', post_id)
+    
+    form = PostForm(request.POST or None, instance=post)
+    if form.is_valid():
+        form.save()
+        return redirect('posts:post_detail', post_id)
+    context = {
+        'form': form,
+        'is_edit': True,
+        'post' : post,
+    }
+    return render(request, 'posts/create_post.html', context)
+    
+    
+    
