@@ -79,7 +79,7 @@ def post_detail(request, post_id):
 @login_required
 def post_create(request):
     #передали в форму полученные данные
-    form = PostForm(request.POST)
+    form = PostForm(request.POST, files=request.FILES or None)
     context = {
         'form': form,
     }
@@ -99,10 +99,10 @@ def post_edit(request, post_id):
     human = post.author
     if human != request.user:
         return redirect('posts:post_detail', post_id)
-    
-    form = PostForm(request.POST or None, instance=post)
+    form = PostForm(request.POST or None, files=request.FILES or None, instance=post)
     if form.is_valid():
-        form.save()
+        if (form.has_changed()):
+            form.save()
         return redirect('posts:post_detail', post_id)
     context = {
         'form': form,

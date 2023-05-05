@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru"> 
-  <head>  
+  <head>
+    {% load thumbnail %}
     <!-- Подключены иконки, стили и заполенены мета теги -->
     <title>Профайл пользователя {{human}} </title>
   </head>
@@ -34,6 +35,11 @@
               </li>
               {% endif %} 
             </ul>
+            {% thumbnail post.image "300" as im %}
+            <center> <a href="{{ post.image.url }}">
+              <img src="{{ im.url }}" class="image-detail">
+            </a></center>
+            {% endthumbnail %}  
             <p>{{ post.text }}</p>    
             <a href="{% url 'posts:post_detail' post.pk %}">подробная информация </a>
             {% if not forloop.last %}<hr>{% endif %}

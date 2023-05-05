@@ -1,5 +1,6 @@
 
 {% extends 'base.html' %}
+{% load thumbnail %}
 
 {% block title %}
   Последние обновления на сайте
@@ -19,7 +20,13 @@
         Группа: {{ post.group.title }}
       </li>
     </ul>
-    <p>{{ post.text }}</p>    
+    {% thumbnail post.image "300" as im %}
+    <center> <a href="{{ post.image.url }}">
+        <img src="{{ im.url }}" class="image-detail">
+    </a></center>
+  {% endthumbnail %}  
+    <p>{{ post.text }}</p>
+
     {% if post.group %}   
     <a href="{% url 'posts:groups_posts' post.group.slug %}">все записи группы</a>
   {% endif %} 

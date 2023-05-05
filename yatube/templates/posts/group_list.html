@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-
+{% load thumbnail %}
 {% block title %}
   Записи группы по интересам
 {% endblock %}
@@ -19,6 +19,11 @@
       Дата публикации: {{ post.pub_date|date:"d E Y" }}
     </li>
   </ul>
+  {% thumbnail post.image "300" as im %}
+  <center> <a href="{{ post.image.url }}">
+    <img src="{{ im.url }}" class="image-detail">
+  </a></center>
+  {% endthumbnail %}  
   <p>{{ post.text }}</p>
   {% if not forloop.last %}<hr>{% endif %}
   {% endfor %}

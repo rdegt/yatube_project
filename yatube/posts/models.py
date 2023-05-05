@@ -19,6 +19,7 @@ class Post(models.Model):
         null=True,
         help_text='Choose group'
     )
+    image = models.ImageField(upload_to='posts/', blank=True, null=True)
     def __str__(self):
         return self.text
 
