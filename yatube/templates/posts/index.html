@@ -7,17 +7,18 @@
 {% endblock %}
 
 {% block main %}
+{% include 'posts/includes/paginator.html' %}
   <!-- класс py-5 создает отступы сверху и снизу блока -->
   {% for post in page_obj %}
     <ul>
       <li>
-        Автор: {{ post.author.get_full_name }}
+        <b>Автор:</b> {{ post.author.get_full_name }}
       </li>
       <li>
-        Дата публикации: {{ post.pub_date|date:"d E Y" }}
+        <b>Дата публикации:</b> {{ post.pub_date|date:"d E Y" }}
       </li>
       <li>
-        Группа: {{ post.group.title }}
+      <b>Группа:</b> {{ post.group.title }}
       </li>
     </ul>
     {% thumbnail post.image "300" as im %}
@@ -28,13 +29,16 @@
     <p>{{ post.text }}</p>
 
     {% if post.group %}   
-    <a href="{% url 'posts:groups_posts' post.group.slug %}">все записи группы</a>
+    <a href="{% url 'posts:groups_posts' post.group.slug %}"><b>Записи группы</b></a>
   {% endif %} 
     <p>{% if user == post.author %}
-      <a href="{% url 'posts:post_edit' post.pk %}">редактировать</a>
+      <a href="{% url 'posts:post_edit' post.pk %}"> <b>Редактировать </b></a>
       {% endif %}
     </p> 
+    <p>
+      <a href="{% url 'posts:post_detail' post.pk %}"> <b>Комментарии </b></a>
+    </p> 
+    {% include 'posts/comments.html'%}
     {% if not forloop.last %}<hr>{% endif %}
   {% endfor %}
-  {% include 'posts/includes/paginator.html' %}
 {% endblock %}

@@ -1,54 +1,44 @@
 <!DOCTYPE html>
+{% extends 'base.html' %}
+{% load thumbnail %}
+
+{% block main %}
 <html lang="ru">
   <head>
     <title>Пост</title>
   </head>
   <body>
-    <header>
-      <nav class="navbar navbar-light" style="background-color: lightskyblue">
-        <div class="container">
-          <a class="navbar-brand" href="/">
-            <img src="/static/img/logo.png" width="30" height="30" class="d-inline-block align-top" alt="">
-            <span style="color:red">Ya</span>tube
-          </a>
-        </div>
-      </nav>      
-    </header>
-    <main>
-      <div class="row">
-        <aside class="col-12 col-md-3">
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">
+          <ul>
+            <li >
               Дата публикации: {{ post.pub_date|date:"d E Y" }}
             </li>
             {% if post.group %}  
-            <li class="list-group-item">
+            <li>
               Группа: {{ post.group.title }}
               <a href="{% url 'posts:groups_posts' post.group.slug %}">
                 все записи группы
               </a>
             </li>
             {% endif %}
-            <li class="list-group-item">
+            <li>
               Автор: {{ post.author.get_full_name }}
             </li>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
+            <li >
               Всего постов автора:  <span ><!-- --></span>
             </li>
-            <li class="list-group-item">
+            <li >
                 <a href="{% url 'posts:profile' post.author.username %}">все посты пользователя</a>
             </li>
           </ul>
-        </aside>
-        <article class="col-12 col-md-9">
-          <p>
-            {{ post.text }}
-          </p>
-        </article>
-      </div> 
-    </main>
-    <footer class="border-top text-center py-3">
-      <p>© {{year}} Copyright <span style="color:red">Ya</span>tube</p>
-    </footer>
+          {% thumbnail post.image "300" as im %}
+          <center> <a href="{{ post.image.url }}">
+              <img src="{{ im.url }}" class="image-detail">
+          </a></center>
+        {% endthumbnail %}  
+          <p>{{ post.text }}</p>
+      {% include 'posts/comments.html'%}
+
+
   </body>
 </html>
+{% endblock  %}

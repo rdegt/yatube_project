@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
-from .forms import PostForm
+from .forms import PostForm, CommentForm
 from django.shortcuts import redirect
 
 # groups/views.py
@@ -70,8 +70,13 @@ def profile(request, username):
 
 def post_detail(request, post_id):
     posts = get_object_or_404(Post, pk=post_id)
+    comments = posts.comments.all()
+    # пустая форма для комментария
+    form = CommentForm()
     context = {
         'post': posts,
+        'comments':comments,
+        'form': form,
     }
     return render(request, 'posts/post_detail.html', context)
 
@@ -111,5 +116,25 @@ def post_edit(request, post_id):
     }
     return render(request, 'posts/create_post.html', context)
     
-    
+
+@login_required
+def add_comment(request, post_id):
+    form = CommentForm(request.POST or None)
+    post = get_object_or_404(Post, pk=post_id)
+    human = request.user
+    context = {
+        'post': post,
+        'form' : form,
+        'comments': post.comments.all()
+    }
+    if form.is_valid():
+        object = form.save(commit=False)
+        #назначаем пользователя объекту и сохраняем его
+        object.author = human
+        object.post = post
+        object.save()
+        return redirect('posts:post_detail', post_id)
+    return render(request, 'posts/post_detail.html', context)
+
+
     
