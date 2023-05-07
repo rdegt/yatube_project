@@ -8,6 +8,23 @@
 {% block main %}
 <html lang="ru"> 
  
+
+  <li class="list-group-item">
+    {% if user != human %}
+      {%if is_follower%}
+         <a class="btn btn-lg btn-light" 
+            href="{% url 'posts:profile_unfollow' human %}" role="button"> 
+            Отписаться 
+          </a> 
+      {%else%}
+          <a class="btn btn-lg btn-primary" 
+            href="{% url 'posts:profile_follow' human %}" role="button">
+                  Подписаться 
+            </a>
+      {%endif%}
+    {%endif%}
+</li>
+
   <body>       
     <main>
       {% if messages %}
@@ -15,9 +32,9 @@
           {% for message in messages %}
             {% if message.tags %} {% endif %}>
             <p style="background-color:#c7f285" align="center"><b>{{ message }} </b></p>
-    {% endfor %}
-    </ul>
-{% endif %}
+          {% endfor %}
+         </ul>
+      {% endif %}
       <div class="container py-5"> 
         <h1>Все посты пользователя {{human}} </h1>
         <h3>Всего постов: {{number_posts}}</h3>   

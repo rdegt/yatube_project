@@ -3,7 +3,7 @@
 {% load thumbnail %}
 
 {% block title %}
-  Последние обновления на сайте
+  Интересные посты
 {% endblock %}
 
 {% block main %}
@@ -14,27 +14,24 @@
             <a class="nav-link {% if index %}active{% endif %}" href="{% url 'posts:index' %}">Все авторы</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {% if follow %}active{% endif %}" href="{% url 'posts:follow_index' %}">Избранные авторы</a>
+            <a class="nav-link {% if follow %}active{% endif %}" href="/follow">Избранные авторы</a>
         </li>
     </ul>
 </div>
 {% endif %}
 
 {% include 'posts/includes/paginator.html' %}
-  <!-- класс py-5 создает отступы сверху и снизу блока -->
   {% for post in page_obj %}
     <ul>
       <li>
-        <b>Автор:</b> <a href="{% url 'posts:profile' post.author.username %}"> @{{post.author.username}}</a>
+        <b>Автор:</b> {{ post.author.get_full_name }}
       </li>
       <li>
         <b>Дата публикации:</b> {{ post.pub_date|date:"d E Y" }}
       </li>
-      {% if post.group %}   
       <li>
-      <b>Группа:</b> <a href="{% url 'posts:groups_posts' post.group.slug %}"> {{ post.group.title }}</a>
+      <b>Группа:</b> {{ post.group.title }}
       </li>
-      {%endif%}
     </ul>
     {% thumbnail post.image "300" as im %}
     <center> <a href="{{ post.image.url }}">
@@ -43,6 +40,9 @@
   {% endthumbnail %}  
     <p>{{ post.text }}</p>
 
+    {% if post.group %}   
+    <a href="{% url 'posts:groups_posts' post.group.slug %}"><b>Записи группы</b></a>
+  {% endif %} 
     <p>{% if user == post.author %}
       <a href="{% url 'posts:post_edit' post.pk %}"> <b>Редактировать </b></a>
       {% endif %}

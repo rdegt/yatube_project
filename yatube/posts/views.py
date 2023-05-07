@@ -10,7 +10,7 @@ from django.template import loader
 from django.shortcuts import render, get_object_or_404
 #get_object_or_404 получает объект из БД или возвращает ошибкуесли не найден
 
-from .models import Post, Group, User
+from .models import Post, Group, User, Follow
 
 from django.contrib.auth.decorators import login_required
 # Декоратор для зареганных пользователей
@@ -61,11 +61,14 @@ def profile(request, username):
     count = paginator.count
     n = request.GET.get('page')
     page_object = paginator.get_page(n)
+    is_follower = request.user.is_authenticated and request.user.follower.filter(author=human).exists()
+
 
     context = {
         'human': human,
         'page_obj': page_object,
         'number_posts': count,
+        'is_follower': is_follower,
     }
     return render(request, 'posts/profile.html', context)
 
@@ -141,4 +144,45 @@ def add_comment(request, post_id):
     return render(request, 'posts/post_detail.html', context)
 
 
+@login_required
+def follow_index(request):
+    # информация о текущем пользователе доступна в переменной request.user
+    # ...
+    human = request.user
+    posts = Post.objects.all().filter(author__followee__user=human).order_by('-pub_date')
+
+    paginator = Paginator(posts, 10)
+    n = request.GET.get("page") # какой номер страницы запрашивает польз
+    page_object  = paginator.get_page(n)
+    context = {
+        'page_obj': page_object ,
+    }
+    return render(request, "posts/follow.html", context)
+
+@login_required
+def profile_follow(request, username):
+    if request.user.username == username:
+        return redirect('posts:profile', username)
+    # username - строка, поэтому получаем объект
+    followee = get_object_or_404(User, username=username)
+    if Follow.objects.filter(user=request.user, author=followee).exists():
+        messages.add_message(request, messages.SUCCESS, 'Вы уже подписаны')
+    else:
+        Follow.objects.create(user=request.user, author=followee)
+        messages.add_message(request, messages.SUCCESS, 'Вы подписались')
+    return redirect('posts:profile', username)
+
+
+@login_required
+def profile_unfollow(request, username):
+    if request.user.username == username:
+        return redirect('posts:profile', username)
+    followee = get_object_or_404(User, username=username)
+    object = Follow.objects.filter(user=request.user, author=followee)
+    if not object.exists():
+        messages.add_message(request, messages.SUCCESS, 'Вы не подписывались')
+    else:
+        object.delete()
+        messages.add_message(request, messages.SUCCESS, 'Вы отписались')
+    return redirect('posts:profile', username)
     
