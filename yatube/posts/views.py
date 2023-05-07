@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 from .forms import PostForm, CommentForm
 from django.shortcuts import redirect
+from django.contrib import messages
 
 # groups/views.py
 from django.http import HttpResponse
@@ -94,6 +95,7 @@ def post_create(request):
         #назначаем пользователя объекту и сохраняем его
         object.author = request.user
         object.save()
+        messages.add_message(request, messages.SUCCESS, 'Ваш пост размещен', extra_tags='create_post')
         return redirect('posts:profile', object.author)
     return render(request, 'posts/create_post.html', context)
 
@@ -108,6 +110,7 @@ def post_edit(request, post_id):
     if form.is_valid():
         if (form.has_changed()):
             form.save()
+            messages.add_message(request, messages.SUCCESS, 'Успешно отредактировано')
         return redirect('posts:post_detail', post_id)
     context = {
         'form': form,
@@ -133,6 +136,7 @@ def add_comment(request, post_id):
         object.author = human
         object.post = post
         object.save()
+        messages.add_message(request, messages.SUCCESS, 'Комментарий добавлен')
         return redirect('posts:post_detail', post_id)
     return render(request, 'posts/post_detail.html', context)
 

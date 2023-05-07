@@ -8,6 +8,14 @@
     <title>Пост</title>
   </head>
   <body>
+    {% if messages %}
+        <ul>
+          {% for message in messages %}
+            {% if message.tags %} {% endif %}>
+            <p style="background-color:#c7f285" align="center"><b>{{ message }} </b></p>
+          {% endfor %}
+         </ul>
+      {% endif %}
           <ul>
             <li >
               Дата публикации: {{ post.pub_date|date:"d E Y" }}

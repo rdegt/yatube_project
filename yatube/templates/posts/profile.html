@@ -10,6 +10,14 @@
  
   <body>       
     <main>
+      {% if messages %}
+        <ul>
+          {% for message in messages %}
+            {% if message.tags %} {% endif %}>
+            <p style="background-color:#c7f285" align="center"><b>{{ message }} </b></p>
+    {% endfor %}
+    </ul>
+{% endif %}
       <div class="container py-5"> 
         <h1>Все посты пользователя {{human}} </h1>
         <h3>Всего постов: {{number_posts}}</h3>   
