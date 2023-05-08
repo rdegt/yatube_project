@@ -32,12 +32,15 @@
         <li class="nav-item"> 
           <a class="nav-link link-light" href="<!--  -->">Изменить пароль</a>
         </li>
+
+        <li class="nav-item"> 
+          <a class="nav-link" href="{% url 'posts:profile' user.username %}">Профиль: {{user.username}}</a>
+        </li>
+
         <li class="nav-item"> 
           <a class="nav-link link-light" href="{% url 'users:logout' %}">Выйти</a>
         </li>
-        <li>
-          Пользователь: {{ user.username }}
-        </li>
+      
         {% else %}
         <li class="nav-item"> 
           <a class="nav-link link-light 

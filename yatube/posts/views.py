@@ -4,6 +4,7 @@ from .forms import PostForm, CommentForm
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.views.generic import DetailView
+from users.forms import UserUpdateForm, ProfileUpdateForm
 
 # groups/views.py
 from django.http import HttpResponse
@@ -12,6 +13,7 @@ from django.shortcuts import render, get_object_or_404
 #get_object_or_404 получает объект из БД или возвращает ошибкуесли не найден
 
 from .models import Post, Group, User, Follow
+from users.models import Profile
 
 from django.contrib.auth.decorators import login_required
 # Декоратор для зареганных пользователей
@@ -64,7 +66,6 @@ def profile(request, username):
     page_object = paginator.get_page(n)
     is_follower = request.user.is_authenticated and request.user.follower.filter(author=human).exists()
 
-
     context = {
         'human': human,
         'page_obj': page_object,
@@ -72,6 +73,39 @@ def profile(request, username):
         'is_follower': is_follower,
     }
     return render(request, 'posts/profile.html', context)
+
+
+
+# def show(request, pk):
+#     users = Profile.objects.filter(id=pk)
+#     context = {
+#         'page_user': users,
+#     }
+#     return render(request, 'posts/user_profile.html', context)
+
+def show(request, pk):
+    if request.method == 'POST':
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST,
+                                   request.FILES,
+                                   instance=request.user.profile)
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, f'Ваш профиль успешно обновлен.')
+            return redirect('posts:user_profile', pk)
+
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+
+    context = {
+        'u_form': u_form,
+        'p_form': p_form
+    }
+
+    return render(request, 'posts/user_profile.html', context)
+
 
 def post_detail(request, post_id):
     posts = get_object_or_404(Post, pk=post_id)

@@ -24,6 +24,7 @@
   <!-- класс py-5 создает отступы сверху и снизу блока -->
   {% for post in page_obj %}
     <ul>
+      <img class="rounded-circle account-img" src="{{  post.author.profile.image.url }}"  height=50 width=50><br>
       <li>
         <b>Автор:</b> <a href="{% url 'posts:profile' post.author.username %}"> @{{post.author.username}}</a>
       </li>
@@ -42,15 +43,22 @@
     </a></center>
   {% endthumbnail %}  
     <p>{{ post.text }}</p>
+    <hr>
+    <style>
+      .edit {
+        float: right
+      }
+    </style>
+    <div class="edit">
 
-    {% include 'posts/includes/likes.html'%}
+    {% include 'posts/includes/likes.html'%} </div>
 
     <p>{% if user == post.author %}
       <a href="{% url 'posts:post_edit' post.pk %}"> <b>Редактировать </b></a>
       {% endif %}
     </p> 
     <p>
-      <a href="{% url 'posts:post_detail' post.pk %}"> <b>Комментарии </b></a>
+      <a href="{% url 'posts:post_detail' post.pk %}"> <b>Комментарии ({{post.comments.count}}) </b></a>
     </p> 
     {% include 'posts/comments.html'%}
     {% if not forloop.last %}<hr>{% endif %}

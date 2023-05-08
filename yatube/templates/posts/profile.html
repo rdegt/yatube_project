@@ -30,13 +30,32 @@
       {% if messages %}
         <ul>
           {% for message in messages %}
-            {% if message.tags %} {% endif %}>
+            {% if message.tags %} {% endif %}
             <p style="background-color:#c7f285" align="center"><b>{{ message }} </b></p>
           {% endfor %}
          </ul>
       {% endif %}
       <div class="container py-5"> 
-        <h1>Все посты пользователя {{human}} </h1>
+
+        <h1><a href="{% url 'posts:profile' human %}"> @{{human}} </a></h1>
+
+        <style>
+          .edit {
+            float: right
+          }
+        </style>
+        <div class="edit">
+        {%if human == user%}
+        <a class="btn btn-lg btn-primary" 
+            href="{% url 'posts:user_profile' user.id %}" role="button">
+                  Редактировать
+            </a>
+      
+        {%endif%}
+      </div>
+
+        <img class="rounded-circle account-img" src="{{  human.profile.image.url }}"  height=100 width=100><br><br>
+        <hr>
         <h3>Всего постов: {{number_posts}}</h3>   
         <article>
           {% include 'posts/includes/paginator.html' %}

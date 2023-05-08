@@ -15,13 +15,12 @@
 
 <!-- Комментарии -->
 {% for item in comments %}
+
+<img class="rounded-circle account-img" src="{{  item.author.profile.image.url }}" height=40 width=40>
+<a href="{% url 'posts:profile' item.author.username %}" >@{{ item.author.username }}</a><small> пишет:</small>
+
 <div class="media mb-4">
 <div class="media-body">
-    <h5 class="mt-0">
-    <a
-        href="{% url 'posts:profile' item.author.username %}"
-        >{{ item.author.username }}</a>
-    </h5>
     {{ item.text |linebreaksbr}}
     <div id="right"><div class="content"><small>{{ item.created|date:"d E Y" }}</small></div></div>
 </div>

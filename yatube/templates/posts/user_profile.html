@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block main %}
+    <div class="content-section">
+      <div class="media">
+        <img class="rounded-circle account-img" src="{{  user.profile.image.url }}"  height=100 width=100><br><br>
+        <div class="media-body">
+          <h2 class="account-heading"> Логин: {{ user.username }}</h2>
+          <p class="account-heading"> Телеграм: {{ user.profile.tg}}</p>
+          <p class="text-secondary">{{ user.email }}</p>
+        </div>
+      </div>
+    
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Ваш профиль</legend>
+
+            {% for field in u_form %}
+              <div class="form-group row my-3"
+                  {% if field.field.required %} aria-required="true" {% else %} aria-required="false" {% endif %}>
+                <label for="{{ field.id_for_label }}">
+                 <b> {{ field.label }}</b>
+                  {% if field.field.required %}<span class="required text-danger">*</span>{% endif %}
+                </label>
+                <div>
+                  {{ field}}
+                  {% if field.help_text %}
+                    <small id="{{ field.id_for_label }}-help" class="form-text text-muted">{{ field.help_text|safe }}</small>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+            {% for field in p_form %}
+              <div class="form-group row my-3"
+                  {% if field.field.required %} aria-required="true" {% else %} aria-required="false" {% endif %}>
+                <label for="{{ field.id_for_label }}">
+                    <b> {{ field.label }}</b>
+                  {% if field.field.required %}<span class="required text-danger">*</span>{% endif %}
+                </label>
+                <div>
+                  {{ field}}
+                  {% if field.help_text %}
+                    <small id="{{ field.id_for_label }}-help" class="form-text text-muted">{{ field.help_text|safe }}</small>
+                  {% endif %}
+                </div>
+              </div>
+            {% endfor %}
+
+        </fieldset>
+        <div class="form-group">
+            <button class="btn btn-outline-info" type="submit">Обновить</button>
+        </div>
+    </form>
+
+    </div>
+{% endblock main %}
