@@ -3,6 +3,7 @@ from django.core.paginator import Paginator
 from .forms import PostForm, CommentForm
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.views.generic import DetailView
 
 # groups/views.py
 from django.http import HttpResponse
@@ -77,10 +78,14 @@ def post_detail(request, post_id):
     comments = posts.comments.all()
     # пустая форма для комментария
     form = CommentForm()
+    liked = False
+    if posts.likes.filter(id=request.user.id).exists():
+        liked = True
     context = {
         'post': posts,
         'comments':comments,
         'form': form,
+        'post_is_liked': liked,
     }
     return render(request, 'posts/post_detail.html', context)
 
@@ -185,4 +190,13 @@ def profile_unfollow(request, username):
         object.delete()
         messages.add_message(request, messages.SUCCESS, 'Вы отписались')
     return redirect('posts:profile', username)
-    
+
+  
+def PostLike(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    if post.likes.filter(id=request.user.id).exists():
+        post.likes.remove(request.user)
+    else:
+        post.likes.add(request.user)
+    return redirect('posts:post_detail', post_id)
+

@@ -19,9 +19,12 @@ class Post(models.Model):
         null=True,
         help_text='Choose group'
     )
+    likes = models.ManyToManyField(User, related_name='post_like')
     image = models.ImageField(upload_to='posts/', blank=True, null=True)
     def __str__(self):
         return self.text
+    def number_of_likes(self):
+        return self.likes.count()
 
 
 class Group(models.Model):
@@ -57,6 +60,7 @@ class Follow(models.Model):
         on_delete=models.CASCADE,
         related_name='followee'
     )
+
 
 
 

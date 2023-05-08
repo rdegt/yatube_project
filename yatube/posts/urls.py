@@ -2,6 +2,7 @@
 from django.urls import path
 from . import views
 
+
 app_name = 'posts'
 urlpatterns = [
     # Главная страница
@@ -16,4 +17,6 @@ urlpatterns = [
     path("follow/", views.follow_index, name="follow_index"),
     path("<str:username>/follow/", views.profile_follow, name="profile_follow"), 
     path("<str:username>/unfollow/", views.profile_unfollow, name="profile_unfollow"),
+    path('post-like/<int:post_id>',views.PostLike, name="post_like"),
+
 ]

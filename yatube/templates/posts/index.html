@@ -43,6 +43,8 @@
   {% endthumbnail %}  
     <p>{{ post.text }}</p>
 
+    {% include 'posts/includes/likes.html'%}
+
     <p>{% if user == post.author %}
       <a href="{% url 'posts:post_edit' post.pk %}"> <b>Редактировать </b></a>
       {% endif %}

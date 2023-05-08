@@ -44,9 +44,10 @@
           </a></center>
         {% endthumbnail %}  
           <p>{{ post.text }}</p>
+
+          <!-- Лайки -->
+      {% include 'posts/includes/likes.html'%}
       {% include 'posts/comments.html'%}
-
-
   </body>
 </html>
 {% endblock  %}
