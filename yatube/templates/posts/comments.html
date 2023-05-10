@@ -24,7 +24,7 @@
     <div id="right"><div class="content"><small>{{ item.created|date:"d E Y" }}</small></div></div>
 </div>
 </div>
-<p align="right" >{% if user == item.author %}
+<p align="right" >{% if user == item.author or user.is_superuser or user.is_staff %}
   <a href="{% url 'posts:delete_comment' item.id %}"> <small><b>Удалить</b></small></a>
   {% endif %}
 </p> 

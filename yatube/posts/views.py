@@ -148,7 +148,7 @@ def post_create(request):
 def post_edit(request, post_id):
     post = get_object_or_404(Post, pk=post_id)
     human = post.author
-    if human != request.user:
+    if human != request.user and not request.user.is_superuser:
         return redirect('posts:post_detail', post_id)
     form = PostForm(request.POST or None, files=request.FILES or None, instance=post)
     if form.is_valid():
@@ -251,16 +251,29 @@ def liked_index(request):
 
 @login_required
 def delete_post(request, post_id):
-    post = get_object_or_404(Post, pk=post_id)
-    post.delete()
-    messages.add_message(request, messages.SUCCESS, 'Пост удален')
+    human = request.user
+    post = get_object_or_404(Post, pk=post_id) 
+    if human == post.author or human.is_superuser or human.is_staff:
+        if (human.is_staff and not human.is_superuser and post.author.is_superuser):
+            messages.add_message(request, messages.SUCCESS, 'Нельзя удалить пост админа')
+            return redirect('posts:index')
+        post.delete()
+        messages.add_message(request, messages.SUCCESS, 'Пост удален')
+    else:
+         messages.add_message(request, messages.SUCCESS, 'Недостаточно прав')
+
     return redirect('posts:index')
 
 
 @login_required
 def delete_comment(request, comment_id):
+    human = request.user
     comment = get_object_or_404(Comment, id=comment_id)
     post_id = comment.post.pk
-    comment.delete()
+    if human == comment.author or human.is_superuser or human.is_staff:
+        if human.is_staff and comment.author.is_superuser:
+            messages.add_message(request, messages.SUCCESS, 'Нельзя удалить комм админа')
+            return redirect('posts:post_detail', post_id)
+        comment.delete()
     messages.add_message(request, messages.SUCCESS, 'Комментарий удален')
     return redirect('posts:post_detail', post_id)
