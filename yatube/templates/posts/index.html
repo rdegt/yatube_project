@@ -7,60 +7,35 @@
 {% endblock %}
 
 {% block main %}
-{% if user.is_authenticated %} 
-<div class="row">
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-            <a class="nav-link {% if index %}active{% endif %}" href="{% url 'posts:index' %}">Все авторы</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link {% if follow %}active{% endif %}" href="{% url 'posts:follow_index' %}">Избранные авторы</a>
-        </li>
-    </ul>
-</div>
-{% endif %}
-
-{% include 'posts/includes/paginator.html' %}
-  <!-- класс py-5 создает отступы сверху и снизу блока -->
-  {% for post in page_obj %}
-    <ul>
-      <img class="rounded-circle account-img" src="{{  post.author.profile.image.url }}"  height=50 width=50><br>
-      <li>
-        <b>Автор:</b> <a href="{% url 'posts:profile' post.author.username %}"> @{{post.author.username}}</a>
-      </li>
-      <li>
-        <b>Дата публикации:</b> {{ post.pub_date|date:"d E Y" }}
-      </li>
-      {% if post.group %}   
-      <li>
-      <b>Группа:</b> <a href="{% url 'posts:groups_posts' post.group.slug %}"> {{ post.group.title }}</a>
-      </li>
-      {%endif%}
-    </ul>
-    {% thumbnail post.image "300" as im %}
-    <center> <a href="{{ post.image.url }}">
-        <img src="{{ im.url }}" class="image-detail">
-    </a></center>
-  {% endthumbnail %}  
-    <p>{{ post.text }}</p>
-    <hr>
-    <style>
-      .edit {
-        float: right
-      }
-    </style>
-    <div class="edit">
-
-    {% include 'posts/includes/likes.html'%} </div>
-
-    <p>{% if user == post.author %}
-      <a href="{% url 'posts:post_edit' post.pk %}"> <b>Редактировать </b></a>
+<main role="main" class="container">
+  <div class="row">
+    <div class="col-md-9">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+          </div>
+        {% endfor %}
       {% endif %}
-    </p> 
-    <p>
-      <a href="{% url 'posts:post_detail' post.pk %}"> <b>Комментарии ({{post.comments.count}}) </b></a>
-    </p> 
-    {% include 'posts/comments.html'%}
-    {% if not forloop.last %}<hr>{% endif %}
-  {% endfor %}
-{% endblock %}
+
+      {%block content%}
+        {% include 'posts/content.html' %}
+      {%endblock%}
+    </div>
+    <div class="col-md-3">
+      <div class="content-section">
+        <h3>Группы</h3>
+        <p class='text-muted'>
+          <ul class="list-group">
+            {% for group in groups %}
+              <li class="list-group-item list-group-item-light">
+                <a href="{% url 'posts:groups_posts' group.slug %}"> {{ group.title }}</a>
+              </li>
+            {%endfor%}
+          </ul>
+        </p>
+      </div>
+    </div>
+  </div>
+</main>
+{%endblock%}

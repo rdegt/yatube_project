@@ -8,7 +8,6 @@ app_name = 'posts'
 urlpatterns = [
     # Главная страница
     path('', views.index, name='index'),
-    # Страница groups с конвертером slug
     path('groups/<slug:slug>/', views.group_posts, name='groups_posts'),
     path('profile/<str:username>/', views.profile, name='profile'),
     path('posts/<int:post_id>/', views.post_detail, name='post_detail'),
@@ -20,5 +19,10 @@ urlpatterns = [
     path("<str:username>/unfollow/", views.profile_unfollow, name="profile_unfollow"),
     path('post-like/<int:post_id>',views.PostLike, name="post_like"),
     path('user_profile/<int:pk>/', views.show, name='user_profile'),
+    path("liked_posts/", views.liked_index, name="liked_post"),
+    path('delete_post/<int:post_id>', views.delete_post, name='delete_post'),
+    path('delete_comment/<int:comment_id>', views.delete_comment, name='delete_comment'),
+    
+
 
 ]

@@ -1,0 +1,50 @@
+{% load thumbnail %}
+{% include 'posts/includes/small_navi.html' %}
+{% include 'posts/includes/paginator.html' %}
+  {% for post in page_obj %}
+    <ul>
+      <img class="rounded-circle account-img" src="{{  post.author.profile.image.url }}"  height=50 width=50><br>
+      <li>
+        <b>Автор:</b> <a href="{% url 'posts:profile' post.author.username %}"> @{{post.author.username}}</a>
+      </li>
+      <li>
+        <b>Дата публикации:</b> {{ post.pub_date|date:"d E Y" }}
+      </li>
+      {% if post.group %}   
+      <li>
+      <b>Группа:</b> <a href="{% url 'posts:groups_posts' post.group.slug %}"> {{ post.group.title }}</a>
+      </li>
+      
+      {%endif%}
+    </ul>
+    {% thumbnail post.image "300" as im %}
+    <center> <a href="{{ post.image.url }}">
+        <img src="{{ im.url }}" class="image-detail">
+    </a></center>
+  {% endthumbnail %}  
+    <p>{{ post.text }}</p>
+    <hr>
+    <style>
+      .edit {
+        float: right
+      }
+    </style>
+    <div class="edit">
+
+    {% include 'posts/includes/likes.html'%} </div>
+
+    <p>{% if user == post.author %}
+      <a href="{% url 'posts:post_edit' post.pk %}"> <b>Редактировать </b></a>
+      {% endif %}
+    </p>
+    <p>{% if user == post.author %}
+      <a href="{% url 'posts:delete_post' post.pk %}"> <b>Удалить </b></a>
+      {% endif %}
+    </p> 
+    <p>
+      <a href="{% url 'posts:post_detail' post.pk %}"> <b>Комментарии ({{post.comments.count}}) </b></a>
+    </p> 
+  
+    {% if not forloop.last %}<hr>{% endif %}
+  {% endfor %}
+

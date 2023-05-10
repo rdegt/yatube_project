@@ -12,7 +12,7 @@ from django.template import loader
 from django.shortcuts import render, get_object_or_404
 #get_object_or_404 получает объект из БД или возвращает ошибкуесли не найден
 
-from .models import Post, Group, User, Follow
+from .models import Post, Group, User, Follow, Comment
 from users.models import Profile
 
 from django.contrib.auth.decorators import login_required
@@ -25,6 +25,7 @@ def index(request):
     # отсортированных по дате новые записи вверху
     # с помощью Paginator
     posts = Post.objects.all().order_by('-pub_date')
+    groups = Group.objects.all()[:5]
     paginator = Paginator(posts, 10)
     n = request.GET.get('page')
 
@@ -34,6 +35,7 @@ def index(request):
     context = {
         #'posts': page_object,
         'page_obj': page_object,
+        'groups': groups,
     }
     return render(request, template, context)
 
@@ -234,3 +236,31 @@ def PostLike(request, post_id):
         post.likes.add(request.user)
     return redirect('posts:post_detail', post_id)
 
+@login_required
+def liked_index(request):
+    human = request.user
+    posts = Post.objects.all().filter(likes__username=human).order_by('-pub_date')
+    paginator = Paginator(posts, 10)
+    n = request.GET.get("page") # какой номер страницы запрашивает польз
+    page_object  = paginator.get_page(n)
+    context = {
+        'page_obj': page_object ,
+    }
+    return render(request, "posts/liked_post.html", context)
+
+
+@login_required
+def delete_post(request, post_id):
+    post = get_object_or_404(Post, pk=post_id)
+    post.delete()
+    messages.add_message(request, messages.SUCCESS, 'Пост удален')
+    return redirect('posts:index')
+
+
+@login_required
+def delete_comment(request, comment_id):
+    comment = get_object_or_404(Comment, id=comment_id)
+    post_id = comment.post.pk
+    comment.delete()
+    messages.add_message(request, messages.SUCCESS, 'Комментарий удален')
+    return redirect('posts:post_detail', post_id)
