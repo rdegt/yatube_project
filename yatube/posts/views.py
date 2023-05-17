@@ -28,9 +28,7 @@ def index(request):
     groups = Group.objects.all()[:5]
     paginator = Paginator(posts, 10)
     n = request.GET.get('page')
-
     page_object = paginator.get_page(n)
-
     template = 'posts/index.html'
     context = {
         #'posts': page_object,

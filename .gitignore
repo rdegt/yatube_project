@@ -8,6 +8,12 @@ yatube/media/
 # C extensions
 *.so
 
+htmlcov/
+.coverage
+.coverage.*
+coverage.xml
+*.cover
+
 # Distribution / packaging
 .Python
 build/

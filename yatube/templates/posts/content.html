@@ -32,19 +32,10 @@
     <div class="edit">
 
     {% include 'posts/includes/likes.html'%} </div>
-
-    <p>{% if user == post.author or user.is_superuser %}
-      <a href="{% url 'posts:post_edit' post.pk %}"> <b>Редактировать </b></a>
-      {% endif %}
-    </p>
-    <p>{% if user == post.author or user.is_superuser or user.is_staff or user.is_staff %}
-      <a href="{% url 'posts:delete_post' post.pk %}"> <b>Удалить </b></a>
-      {% endif %}
-    </p> 
-    <p>
-      <a href="{% url 'posts:post_detail' post.pk %}"> <b>Комментарии ({{post.comments.count}}) </b></a>
-    </p> 
+    {% include 'posts/includes/action_in_post.html'%}
   
     {% if not forloop.last %}<hr>{% endif %}
   {% endfor %}
+  {% include 'posts/includes/paginator.html' %}
+
 

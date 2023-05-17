@@ -5,19 +5,25 @@
 {% endblock %}
 
 {% block main %}
-<h2><center> {{group.title}} </center></h2>
-<p><b><center>
-  {{ group.description }}
+<h2 class="card-header"><center>{{group.title}}</center></h2>
+<p ><b><center> {{ group.description }}
 </center></b></p>
 <!-- класс py-5 создает отступы сверху и снизу блока -->
   {% for post in page_obj %}
   <ul>
+    <img class="rounded-circle account-img" src="{{  post.author.profile.image.url }}"  height=50 width=50><br>
     <li>
-      Автор: {{ post.author.get_full_name }}
+      <b>Автор:</b> <a href="{% url 'posts:profile' post.author.username %}"> @{{post.author.username}}</a>
     </li>
     <li>
-      Дата публикации: {{ post.pub_date|date:"d E Y" }}
+      <b>Дата публикации:</b> {{ post.pub_date|date:"d E Y" }}
     </li>
+    {% if post.group %}   
+    <li>
+    <b>Группа:</b> <a href="{% url 'posts:groups_posts' post.group.slug %}"> {{ post.group.title }}</a>
+    </li>
+    
+    {%endif%}
   </ul>
   {% thumbnail post.image "300" as im %}
   <center> <a href="{{ post.image.url }}">
@@ -25,6 +31,9 @@
   </a></center>
   {% endthumbnail %}  
   <p>{{ post.text }}</p>
+  {% include 'posts/includes/likes.html'%}
+  {% include 'posts/includes/action_in_post.html'%}
+ </div>
   {% if not forloop.last %}<hr>{% endif %}
   {% endfor %}
   {% include 'posts/includes/paginator.html' %}
