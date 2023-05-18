@@ -10,6 +10,9 @@
         <li class="nav-item">
             <a class="nav-link {% if request.resolver_match.view_name == 'posts:liked_post' %}active{% endif %}" href="{% url 'posts:liked_post' %}">Понравившиеся</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {% if request.resolver_match.view_name == 'posts:contact' %}active{% endif %}" href="{% url 'posts:contact' %}">Обратная связь</a>
+        </li>
     </ul>
 </div>
 {%endif%}
