@@ -9,6 +9,14 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = ('text', 'group', 'image')
 
+
+class ContactForm(forms.Form):
+    name = forms.CharField(max_length=50, help_text='Ваше имя')
+    email = forms.EmailField(help_text='email')
+    topic = forms.CharField(max_length=50)
+    text = forms.CharField(widget=forms.Textarea, max_length=1000)
+
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
@@ -16,3 +24,4 @@ class CommentForm(forms.ModelForm):
         widgets = {
             'text': Textarea(attrs={'rows': 3})
         }
+

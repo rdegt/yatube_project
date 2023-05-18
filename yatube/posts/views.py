@@ -1,10 +1,13 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
-from .forms import PostForm, CommentForm
+from django.conf import settings
+
+from .forms import PostForm, CommentForm, ContactForm
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.views.generic import DetailView
 from users.forms import UserUpdateForm, ProfileUpdateForm
+from django.core.mail import send_mail, BadHeaderError
 
 # groups/views.py
 from django.http import HttpResponse
@@ -275,3 +278,27 @@ def delete_comment(request, comment_id):
         comment.delete()
     messages.add_message(request, messages.SUCCESS, 'Комментарий удален')
     return redirect('posts:post_detail', post_id)
+
+
+def send_email(request):
+        form = ContactForm(request.POST or None)
+        if form.is_valid():
+            # Берём валидированные данные формы из словаря form.cleaned_data
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            topic = form.cleaned_data['topic']
+            text = form.cleaned_data['text']
+            message = '\n'.join([email, name, text])
+            try:
+                send_mail(topic, message, "r.degtyarev5@mail.ru", ["r.degtyarev5@mail.ru"])
+            except BadHeaderError:
+                return HttpResponse('Ошибка')
+            messages.add_message(request, messages.SUCCESS, 'Письмо отправлено')
+            return redirect('posts:index')
+        context = {
+            'form': form,
+        }
+        return render(request, 'posts/contact.html', context)
+
+            
+
