@@ -4,9 +4,9 @@ __pycache__/
 *$py.class
 
 .vscode/
-yatube/media/cache
-yatube/media/posts
-yatube/media/profile_pics
+/yatube/media/cache
+/yatube/media/posts
+/yatube/media/profile_pics
 
 # C extensions
 *.so
