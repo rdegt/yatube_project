@@ -1,6 +1,6 @@
-{% if user.is_authenticated %} 
 <div class="row">
     <ul class="nav nav-tabs">
+        {% if user.is_authenticated %} 
         <li class="nav-item">
             <a class="nav-link {% if request.resolver_match.view_name == 'posts:index' %}active{% endif %}" href="{% url 'posts:index' %}">Все авторы</a>
         </li>
@@ -10,9 +10,9 @@
         <li class="nav-item">
             <a class="nav-link {% if request.resolver_match.view_name == 'posts:liked_post' %}active{% endif %}" href="{% url 'posts:liked_post' %}">Понравившиеся</a>
         </li>
+        {%endif%}
         <li class="nav-item">
             <a class="nav-link {% if request.resolver_match.view_name == 'posts:contact' %}active{% endif %}" href="{% url 'posts:contact' %}">Обратная связь</a>
         </li>
     </ul>
 </div>
-{%endif%}
