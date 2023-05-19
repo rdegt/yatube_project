@@ -1,5 +1,7 @@
 {% load thumbnail %}
+{%block navi%}
 {% include 'posts/includes/small_navi.html' %}
+{%endblock%}
 {% include 'posts/includes/paginator.html' %}
   {% for post in page_obj %}
     <ul>

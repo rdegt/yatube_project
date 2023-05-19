@@ -20,8 +20,8 @@ class SignUp(CreateView):
 
     #Данные отправленные через форму будут переданы в модель User и сохранены в БД
 
-class PasswordChange(UpdateView):
-    model = Profile
-    form_class = PasswordChangeForm
-    success_url = reverse_lazy('users:password_change_done')
-    template_name = 'users/password_change_form.html'
+# class PasswordChange(UpdateView):
+#     model = Profile
+#     form_class = PasswordChangeForm
+#     success_url = reverse_lazy('users:password_change_done')
+#     template_name = 'users/password_change_form.html'

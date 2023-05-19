@@ -17,6 +17,10 @@ class ContactForm(forms.Form):
     text = forms.CharField(widget=forms.Textarea, max_length=1000)
 
 
+class SearchForm(forms.Form):
+    text = forms.CharField(max_length=100)
+
+
 class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment

@@ -22,9 +22,8 @@ urlpatterns = [
     path("liked_posts/", views.liked_index, name="liked_post"),
     path('delete_post/<int:post_id>', views.delete_post, name='delete_post'),
     path('delete_comment/<int:comment_id>', views.delete_comment, name='delete_comment'),
-    path('contact', views.send_email, name='contact' )
-
-    
+    path('contact', views.send_email, name='contact' ),
+    path('search/', views.search, name='search'),
 
 
 ]

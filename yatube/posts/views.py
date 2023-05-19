@@ -2,7 +2,7 @@ from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.conf import settings
 
-from .forms import PostForm, CommentForm, ContactForm
+from .forms import PostForm, CommentForm, ContactForm, SearchForm
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.views.generic import DetailView
@@ -300,5 +300,22 @@ def send_email(request):
         }
         return render(request, 'posts/contact.html', context)
 
-            
+
+def search(request):
+    form = SearchForm(request.POST or None)
+    count = 0
+    posts = None
+    if form.is_valid():
+        data = form.cleaned_data['text']
+        posts = Post.objects.filter(text__icontains=data)
+        count = posts.count()
+    context = {
+        'page_obj': posts,
+        'number_posts': count,
+        'form': form,
+    }
+    return render(request, 'posts/search.html', context)
+
+
+
 
