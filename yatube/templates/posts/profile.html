@@ -52,6 +52,15 @@
             </a>
       
         {%endif%}
+        <br>
+       <p> Подписчики ({{count_of_follower}}) </p>
+        {% for h in followers %}
+        <a href="{% url 'posts:profile' h %}">
+           <img class="rounded-circle account-img" src="{{  h.profile.image.url }}"  height=50 width=50>
+        </a>
+        
+        {% endfor %}
+        
       </div>
       {% comment %} <img class="rounded-circle account-img" src="{{  human.profile.image.url }}"  height=100 width=100><br><br>
         <hr>  {% endcomment %}
@@ -69,7 +78,6 @@
                  <li>Телеграм: @{{human.profile.tg}} </li>
                  <li>Подписок: {{count_of_followee}} </li>
                  <li>Подписчиков: {{count_of_follower}} </li>
-                 
              </ul>
          </div>
      </div>

@@ -70,7 +70,7 @@ def profile(request, username):
     is_follower = request.user.is_authenticated and request.user.follower.filter(author=human).exists()
     count_of_followee = human.follower.count()
     count_of_follower = human.followee.count()
-
+    followers = User.objects.all().filter(follower__author=human)
     context = {
         'human': human,
         'page_obj': page_object,
@@ -78,6 +78,8 @@ def profile(request, username):
         'is_follower': is_follower,
         'count_of_followee': count_of_followee,
         'count_of_follower': count_of_follower,
+        'followers': followers,
+    
     }
     return render(request, 'posts/profile.html', context)
 
