@@ -272,7 +272,7 @@ def delete_comment(request, comment_id):
     comment = get_object_or_404(Comment, id=comment_id)
     post_id = comment.post.pk
     if human == comment.author or human.is_superuser or human.is_staff:
-        if human.is_staff and comment.author.is_superuser:
+        if human.is_staff and not human.is_superuser and comment.author.is_superuser:
             messages.add_message(request, messages.SUCCESS, 'Нельзя удалить комм админа')
             return redirect('posts:post_detail', post_id)
         comment.delete()
