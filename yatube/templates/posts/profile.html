@@ -53,9 +53,28 @@
       
         {%endif%}
       </div>
+      {% comment %} <img class="rounded-circle account-img" src="{{  human.profile.image.url }}"  height=100 width=100><br><br>
+        <hr>  {% endcomment %}
 
-        <img class="rounded-circle account-img" src="{{  human.profile.image.url }}"  height=100 width=100><br><br>
-        <hr>
+      <div class="row">
+        <div class="col-md-1">
+          <figure>
+              <img src="{{ human.profile.image.url  }}" class="rounded-circle account-img" height=100 width=100 alt="{{ profile }}">
+          </figure>
+      </div>
+        <div class="col-md-9">
+
+         <div class="card-text">
+             <ul>
+                 <li>Телеграм: @{{human.profile.tg}} </li>
+                 <li>Подписок: {{count_of_followee}} </li>
+                 <li>Подписчиков: {{count_of_follower}} </li>
+                 
+             </ul>
+         </div>
+     </div>
+    </div>
+<hr>
         <h3>Всего постов: {{number_posts}}</h3>   
         <article>
           {% include 'posts/includes/paginator.html' %}

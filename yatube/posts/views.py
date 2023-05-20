@@ -68,12 +68,16 @@ def profile(request, username):
     n = request.GET.get('page')
     page_object = paginator.get_page(n)
     is_follower = request.user.is_authenticated and request.user.follower.filter(author=human).exists()
+    count_of_followee = human.follower.count()
+    count_of_follower = human.followee.count()
 
     context = {
         'human': human,
         'page_obj': page_object,
         'number_posts': count,
         'is_follower': is_follower,
+        'count_of_followee': count_of_followee,
+        'count_of_follower': count_of_follower,
     }
     return render(request, 'posts/profile.html', context)
 
