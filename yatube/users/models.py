@@ -5,6 +5,19 @@ from PIL import Image
 
 
 # Create your models here.
+class BanInAuth(models.Model):
+    class Meta:
+        db_table = 'BanInAuth'
+
+    count = models.IntegerField('счетчик', default=0)
+    ip = models.GenericIPAddressField("ip")
+    is_ban = models.BooleanField('Заблокирован', default=False)
+    time = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return self.ip
+    
+    
 
 class Profile(models.Model):
     user=models.OneToOneField(User, null=True, on_delete=models.CASCADE, related_name='profile')
