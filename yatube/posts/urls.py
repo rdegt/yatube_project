@@ -25,6 +25,6 @@ urlpatterns = [
     path('contact', views.send_email, name='contact' ),
     path('search/', views.search, name='search'),
     path('ban/<str:username>/',views.ban, name='ban'),
-
+    path('moderate/<str:username>/',views.moderate, name='moderate'),
 
 ]

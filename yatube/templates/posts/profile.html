@@ -23,24 +23,29 @@
             </a>
       {%endif%}
       {%if user.is_superuser or user.is_staff%}
-      <a class="btn btn-lg btn-primary" 
-      href="{% url 'posts:ban' human %}" role="button">
+        <a class="btn btn-lg btn-danger" 
+         href="{% url 'posts:ban' human %}" role="button">
             Заблокировать 
-      </a>
+         </a>
+        <a class="btn btn-lg btn-danger" 
+           href="{% url 'posts:moderate' human %}" role="button">
+            Нарушения 
+         </a>
+
       {%endif%}
     {%endif%}
 </li>
 
   <body>       
     <main>
-      {% if messages %}
+    {% if messages %}
         <ul>
           {% for message in messages %}
             {% if message.tags %} {% endif %}
             <p style="background-color:#c7f285" align="center"><b>{{ message }} </b></p>
           {% endfor %}
          </ul>
-      {% endif %}
+      {% endif %} 
       <div class="container py-5"> 
 
         <h1><a href="{% url 'posts:profile' human %}"> @{{human}} </a></h1>

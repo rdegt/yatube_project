@@ -49,6 +49,16 @@ class Comment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
 
 
+class BanList(models.Model):
+        author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='ban_list'
+        )
+        reason = models.CharField(max_length=100, null=True, blank=True)
+        data_ban = models.DateTimeField(blank=True, null=True)
+
+
 class Follow(models.Model):
     user = models.ForeignKey(
         User,

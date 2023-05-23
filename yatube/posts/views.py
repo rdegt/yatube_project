@@ -16,7 +16,7 @@ from django.template import loader
 from django.shortcuts import render, get_object_or_404
 #get_object_or_404 получает объект из БД или возвращает ошибкуесли не найден
 
-from .models import Post, Group, User, Follow, Comment
+from .models import Post, Group, User, Follow, Comment, BanList
 from users.models import Profile
 
 from django.contrib.auth.decorators import login_required
@@ -85,6 +85,7 @@ def profile(request, username):
     count_of_followee = human.follower.count()
     count_of_follower = human.followee.count()
     followers = User.objects.all().filter(follower__author=human)
+    ban = BanList.objects.all().filter(author=human)
     context = {
         'human': human,
         'page_obj': page_object,
@@ -93,6 +94,8 @@ def profile(request, username):
         'count_of_followee': count_of_followee,
         'count_of_follower': count_of_follower,
         'followers': followers,
+        'ban': ban,
+        'count_ban': ban.count(),
     
     }
     return render(request, 'posts/profile.html', context)
@@ -361,6 +364,8 @@ def ban(request, username):
         human.profile.reason_ban = reason
         human.profile.time = timezone.now() + timezone.timedelta(minutes=time_ban)
         human.profile.save()
+        ban = BanList.objects.create(reason=reason, data_ban=timezone.now(), author=human)
+        ban.save()
         messages.success(request, f'Пользователь заблокирован.')
         return redirect('posts:profile', username)
     context = {
@@ -368,5 +373,17 @@ def ban(request, username):
     }
     return render(request, 'posts/ban.html', context)
 
+
+@login_required
+def moderate(request, username):
+    if not request.user.is_superuser and not request.user.is_staff:
+        return redirect('posts:index')
+    human = get_object_or_404(User, username=username)
+    ban_list = BanList.objects.all().filter(author=human)
+    context = {
+        'bans': ban_list,
+        'human': human,
+    }
+    return render(request, 'posts/moderate.html', context)
 
 
