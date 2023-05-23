@@ -22,6 +22,12 @@
                   Подписаться 
             </a>
       {%endif%}
+      {%if user.is_superuser or user.is_staff%}
+      <a class="btn btn-lg btn-primary" 
+      href="{% url 'posts:ban' human %}" role="button">
+            Заблокировать 
+      </a>
+      {%endif%}
     {%endif%}
 </li>
 
@@ -75,9 +81,18 @@
 
          <div class="card-text">
              <ul>
-                 <li>Телеграм: @{{human.profile.tg}} </li>
-                 <li>Подписок: {{count_of_followee}} </li>
-                 <li>Подписчиков: {{count_of_follower}} </li>
+                 <li><b>Телеграм:</b> @{{human.profile.tg}} </li>
+                 <li><b>Подписок:</b> {{count_of_followee}} </li>
+                 <li><b>Подписчиков:</b> {{count_of_follower}} </li>
+                 {% if user.is_staff or user.is_superuser or user == human%}
+                   {%if human.profile.is_ban%} 
+                     <li><b>Блокировка:</b> Да </li>
+                     <li><b>Время разбана:</b> {{human.profile.time}} </li>
+                     <li><b>Причина:</b> {{human.profile.reason_ban}} </li>
+                    {% else %} 
+                    <li><b>Блокировка: Нет </b></li>
+                   {%endif%}
+                  {%endif%}
              </ul>
          </div>
      </div>

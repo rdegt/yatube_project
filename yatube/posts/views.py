@@ -1,12 +1,13 @@
 from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.conf import settings
+from django.utils import timezone
 
 from .forms import PostForm, CommentForm, ContactForm, SearchForm
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.views.generic import DetailView
-from users.forms import UserUpdateForm, ProfileUpdateForm
+from users.forms import UserUpdateForm, ProfileUpdateForm, BanForm
 from django.core.mail import send_mail, BadHeaderError
 
 # groups/views.py
@@ -22,6 +23,19 @@ from django.contrib.auth.decorators import login_required
 # Декоратор для зареганных пользователей
 
 # Главная страница
+
+def ban_user(request, human):
+    if human.profile.is_ban and human.profile.time > timezone.now():
+        messages.success(request, f'Вы заблокированы до {human.profile.time}. '
+                         f'Причина: {human.profile.reason_ban} '  
+                         f'Попробуйте написать позже')
+        return True
+    if human.profile.is_ban and human.profile.time <= timezone.now():
+        human.profile.is_ban = False
+        human.profile.save()
+        return False
+
+
 
 def index(request):
     # в post сохранена выборка из 10 объектов модели Post
@@ -137,6 +151,9 @@ def post_detail(request, post_id):
 def post_create(request):
     #передали в форму полученные данные
     form = PostForm(request.POST, files=request.FILES or None)
+    is_ban = ban_user(request, request.user)
+    if is_ban:
+        return redirect('posts:index')
     context = {
         'form': form,
     }
@@ -153,6 +170,9 @@ def post_create(request):
 
 @login_required
 def post_edit(request, post_id):
+    is_ban = ban_user(request, request.user)
+    if is_ban:
+        return redirect('posts:index')
     post = get_object_or_404(Post, pk=post_id)
     human = post.author
     if human != request.user and not request.user.is_superuser:
@@ -173,6 +193,9 @@ def post_edit(request, post_id):
 
 @login_required
 def add_comment(request, post_id):
+    is_ban = ban_user(request, request.user)
+    if is_ban:
+        return redirect('posts:post_detail', post_id)
     form = CommentForm(request.POST or None)
     post = get_object_or_404(Post, pk=post_id)
     human = request.user
@@ -322,6 +345,28 @@ def search(request):
     }
     return render(request, 'posts/search.html', context)
 
+
+@login_required
+def ban(request, username):
+    if not request.user.is_superuser and not request.user.is_staff:
+        return redirect('posts:index')
+    form = BanForm(request.POST or None)
+    human = get_object_or_404(User, username=username)
+    if request.user.is_superuser and not request.user.is_staff and human.is_superuser:
+        return redirect('posts:index')
+    if form.is_valid():
+        reason = form.cleaned_data['reason']
+        time_ban = int(form.cleaned_data['time_ban'].split(' ')[0])
+        human.profile.is_ban = True
+        human.profile.reason_ban = reason
+        human.profile.time = timezone.now() + timezone.timedelta(minutes=time_ban)
+        human.profile.save()
+        messages.success(request, f'Пользователь заблокирован.')
+        return redirect('posts:profile', username)
+    context = {
+        'form': form,
+    }
+    return render(request, 'posts/ban.html', context)
 
 
 

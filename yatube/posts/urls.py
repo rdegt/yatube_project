@@ -24,6 +24,7 @@ urlpatterns = [
     path('delete_comment/<int:comment_id>', views.delete_comment, name='delete_comment'),
     path('contact', views.send_email, name='contact' ),
     path('search/', views.search, name='search'),
+    path('ban/<str:username>/',views.ban, name='ban'),
 
 
 ]
