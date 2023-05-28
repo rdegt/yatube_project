@@ -4,7 +4,8 @@
 {%endblock%}
 {% include 'posts/includes/paginator.html' %}
   {% for post in page_obj %}
-    <ul>
+    <ul> 
+
       <img class="rounded-circle account-img" src="{{  post.author.profile.image.url }}"  height=50 width=50><br>
       <li>
         <b>Автор:</b> <a href="{% url 'posts:profile' post.author.username %}"> @{{post.author.username}}</a>

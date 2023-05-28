@@ -32,6 +32,14 @@ admin.site.register(Post, PostAdmin)
 
 admin.site.register(Group, GroupAdmin)
 
+class BanListAdmin(admin.ModelAdmin):
+        list_display = (
+        'author',
+        'reason',
+        'data_ban',
+    )
+
+
 
 
 

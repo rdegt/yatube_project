@@ -61,7 +61,8 @@ def group_posts(request, slug):
     group = get_object_or_404(Group, slug=slug)
     # в posts сохранена выборка из 10 объектов модели Post
     # отсортированных по дате новые записи вверху filter=group
-    posts = Post.objects.all().filter(group=group).order_by('-pub_date')
+    important_posts = Post.objects.all().filter(group=group).filter(status=True).order_by('-pub_date')
+    posts = Post.objects.all().filter(group=group).filter(status=False).order_by('-pub_date')
     paginator = Paginator(posts, 2)
     n = request.GET.get('page')
     page_object = paginator.get_page(n)
@@ -70,6 +71,7 @@ def group_posts(request, slug):
     context = {
         'group': group,
         'page_obj': page_object,
+        'important_posts': important_posts,
     }
     return render(request, template, context)
 
@@ -355,7 +357,8 @@ def ban(request, username):
         return redirect('posts:index')
     form = BanForm(request.POST or None)
     human = get_object_or_404(User, username=username)
-    if request.user.is_superuser and not request.user.is_staff and human.is_superuser:
+    if not request.user.is_superuser and request.user.is_staff and human.is_superuser:
+        messages.warning(request, f'Нельзя заблокировать администратора')
         return redirect('posts:index')
     if form.is_valid():
         reason = form.cleaned_data['reason']
@@ -385,5 +388,28 @@ def moderate(request, username):
         'human': human,
     }
     return render(request, 'posts/moderate.html', context)
+
+
+@login_required
+def make_important(request, post_id):
+    if not request.user.is_superuser and not request.user.is_staff:
+        return redirect('posts:index')
+    post = get_object_or_404(Post, pk=post_id) 
+    post.status = True
+    post.save()
+    return redirect('posts:index')
+
+
+@login_required
+def make_unimportant(request, post_id):
+    if not request.user.is_superuser and not request.user.is_staff:
+        return redirect('posts:index')
+    post = get_object_or_404(Post, pk=post_id) 
+    post.status = False
+    post.save()
+    return redirect('posts:index')
+
+    
+    
 
 

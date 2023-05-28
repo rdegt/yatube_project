@@ -5,6 +5,7 @@ User = get_user_model()
 
 class Post(models.Model):
     text = models.TextField()
+    status = models.BooleanField(default=False)
     pub_date = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey(
         User,

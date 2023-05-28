@@ -26,5 +26,7 @@ urlpatterns = [
     path('search/', views.search, name='search'),
     path('ban/<str:username>/',views.ban, name='ban'),
     path('moderate/<str:username>/',views.moderate, name='moderate'),
+    path('make_important/<int:post_id>', views.make_important, name='important'),
+    path('make_unimportant/<int:post_id>', views.make_unimportant, name='unimportant'),
 
 ]

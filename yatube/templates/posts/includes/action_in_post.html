@@ -4,6 +4,8 @@
   </p>
   <p>{% if user == post.author or user.is_superuser or user.is_staff or user.is_staff %}
     <a href="{% url 'posts:delete_post' post.pk %}"> <b>Удалить </b></a>
+    <p><a href="{% url 'posts:important' post.pk %}"> <b>Закрепить </b></a></p>
+    <a href="{% url 'posts:unimportant' post.pk %}"> <b>Открепить </b></a>
     {% endif %}
   </p> 
   <p>
