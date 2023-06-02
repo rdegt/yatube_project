@@ -7,6 +7,9 @@
 - Python 3.7
 - Django 2.2.19
 
+
+http://prakt.pythonanywhere.com
+
 ### Запуск проекта в dev-режиме
 - Установите и активируйте виртуальное окружение
 - Установите зависимости из файла requirements.txt
